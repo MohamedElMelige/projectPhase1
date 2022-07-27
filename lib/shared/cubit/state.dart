@@ -6,3 +6,4 @@ class InsertDatabaseState extends AppState{}
 class GetLoadingDatabaseState extends AppState{}
 class GetDatabaseState extends AppState{}
 class ChangeColorState extends AppState{}
+class DeleteDatabaseState extends AppState{}

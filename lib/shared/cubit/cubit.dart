@@ -1,9 +1,13 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/modules/favorit_task.dart';
 import 'package:flutter_application_1/shared/cubit/state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sqflite/sqflite.dart';
+
+import '../../modules/done_tasks.dart';
+import '../../modules/tasks.dart';
 
 class AppCubit extends Cubit<AppState>{
   AppCubit(): super(InitialState());
@@ -13,7 +17,7 @@ class AppCubit extends Cubit<AppState>{
   List<Map> achriveTasks = [];
   late Database database;
   int currentIndex = 0;
-  List<Widget> screen = [Tasks(), DoneTasks(), ArchivedTasks()];
+  List<Widget> screen = [Tasks(), DoneTasks(), FavoritTasks()];
   List<String> appbar = ['Tasks', 'Done Tasks', 'Archived Tasks'];
   IconData febIcon = Icons.edit;
   bool togle = false;
@@ -75,5 +79,11 @@ class AppCubit extends Cubit<AppState>{
     togle = isShow;
     febIcon = icon;
     emit(ChangeColorState());
+  }
+  void deleteData({required int id})async{
+    database.rawDelete('DELETE FROM tasks WHERE id =?',[id]).then((value) {
+      getDatabase(database);
+      emit(DeleteDatabaseState());
+    });
   }
 }
