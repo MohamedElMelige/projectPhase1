@@ -6,23 +6,35 @@ class Board extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        body:Padding(
-          padding: const EdgeInsets.all(30.0),
-          child: Column(
+        child: Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.all(30.0),
+        child: Column(children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Board',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
-                  IconButton(onPressed: (){}, icon: Icon(Icons.schedule))
-                ],
+              Text(
+                'Board',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-              PageView()
-            ]
+              IconButton(onPressed: () {}, icon: Icon(Icons.schedule))
+            ],
+          ),
+          SizedBox(height: 30,),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Column(
+              children: [
+                TextButton(onPressed: (){}, child: Text('All')),
+                TextButton(onPressed: (){}, child: Text('Completed')),
+                TextButton(onPressed: (){}, child: Text('Uncompleted')),
+                TextButton(onPressed: (){}, child: Text('Favourit')),
+              ],
             ),
-        ) ,
-        )
-        ) ;
+          ),
+          PageView()
+        ]),
+      ),
+    ));
   }
 }
