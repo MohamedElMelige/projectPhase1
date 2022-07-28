@@ -19,7 +19,7 @@ class AppCubit extends Cubit<AppState>{
   int currentIndex = 0;
   List<Widget> screen = [Tasks(), DoneTasks(), FavoritTasks()];
   List<String> appbar = ['Tasks', 'Done Tasks', 'Archived Tasks'];
-  IconData febIcon = Icons.edit;
+  final key= 'isDarkMode';
   bool togle = false;
 
   void changeIndex(index) {
@@ -75,10 +75,10 @@ class AppCubit extends Cubit<AppState>{
       emit(GetDatabaseState());
     });
   }
-  void changeColorState({required bool isShow, required IconData icon}) {
-    togle = isShow;
-    febIcon = icon;
-    emit(ChangeColorState());
+  ThemeMode appMode= ThemeMode.dark;
+  void changeThemeState() {
+    togle = !togle;
+    emit(ChangeThemeState());
   }
   void deleteData({required int id})async{
     database.rawDelete('DELETE FROM tasks WHERE id =?',[id]).then((value) {
