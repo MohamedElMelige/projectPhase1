@@ -96,3 +96,33 @@ Widget biuldTaskItem(Map model,context) => Dismissible(
 
   ),
 );
+
+Widget defaultFormField({
+  required TextEditingController controller,
+  required TextInputType type,
+  var onSubmit,
+  var onChange,
+  required var validat,
+  required String label,
+  required IconData prefix,
+  var onTap,
+  IconData? suffix,
+  bool isPassword = false,
+  bool isClickable = true,
+}) =>
+    TextFormField(
+      onTap: onTap,
+      onFieldSubmitted: onSubmit,
+      onChanged: onChange,
+      controller: controller,
+      validator: validat,
+      enabled: isClickable,
+      obscureText: isPassword,
+      decoration: InputDecoration(
+        suffix: suffix != null ? Icon(suffix) : null,
+        labelText: label,
+        border: OutlineInputBorder(),
+        prefix: Icon(prefix),
+      ),
+      keyboardType: type,
+    );

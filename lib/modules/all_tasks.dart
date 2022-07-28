@@ -5,19 +5,19 @@ import '../shared/componants/componants.dart';
 import '../shared/cubit/cubit.dart';
 import '../shared/cubit/state.dart';
 
-class FavoriteTasks extends StatefulWidget {
-  const FavoriteTasks({Key? key}) : super(key: key);
+class AllTasks extends StatefulWidget {
+  const AllTasks({Key? key}) : super(key: key);
 
   @override
-  State<FavoriteTasks> createState() => _FavoriteTasksState();
+  _AllTasksState createState() => _AllTasksState();
 }
 
-class _FavoriteTasksState extends State<FavoriteTasks> {
+class _AllTasksState extends State<AllTasks> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit, AppState>(
       builder: (BuildContext context, state) {
-        var tasks=AppCubit.get(context).favoriteTasks;
+        var tasks=AppCubit.get(context).allTasks;
         return tasksBuilder(tasks: tasks);
       },
       listener: (BuildContext context, Object? state) {},

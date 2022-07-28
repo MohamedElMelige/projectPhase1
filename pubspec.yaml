@@ -37,6 +37,8 @@ dependencies:
   flutter_bloc: ^8.0.1
   sqflite: ^2.0.3
   intl: ^0.17.0
+  flutter_local_notifications: ^9.7.0
+  flutter_native_timezone: ^2.0.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
