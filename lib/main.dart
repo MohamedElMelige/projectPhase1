@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/shared/cubit/cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'layout/add_task.dart';
 import 'layout/board.dart';
-import 'layout/schedule.dart';
 import 'shared/cubit/state.dart';
 import 'shared/style/themes.dart';
 
@@ -29,7 +26,7 @@ class MyApp extends StatelessWidget {
                 themeMode: AppCubit.get(context).isDark
                     ? ThemeMode.dark
                     : ThemeMode.light,
-                home:AddTask(),
+                home:Board(),
               );
             },
             listener: (context, state) {}));

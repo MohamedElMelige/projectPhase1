@@ -1,10 +1,9 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../shared/componants/componants.dart';
-import '../shared/cubit/cubit.dart';
-import '../shared/cubit/state.dart';
+
+import '../shared/componants/all_widget.dart';
+
 
 class DoneTasks extends StatefulWidget {
   const DoneTasks({Key? key}) : super(key: key);
@@ -16,12 +15,13 @@ class DoneTasks extends StatefulWidget {
 class _DoneTasksState extends State<DoneTasks> {
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<AppCubit, AppState>(
-      builder: (BuildContext context, state) {
-        var tasks=AppCubit.get(context).doneTasks;
-        return tasksBuilder(tasks: tasks);
-      },
-      listener: (BuildContext context, Object? state) {},
-    );
+    return ListView.separated(
+        itemBuilder: (context, index) =>
+            const AllWidget(),
+        separatorBuilder: (context, index) => const SizedBox(
+          width: double.infinity,
+          height: 5.5,
+        ),
+        itemCount: 4);
   }
 }
