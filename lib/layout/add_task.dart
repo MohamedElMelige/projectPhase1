@@ -1,15 +1,17 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/shared/componants/componants.dart';
+import 'package:flutter_application_1/shared/componants/default_form_field.dart';
+
 import 'package:flutter_application_1/shared/componants/myButton.dart';
 import 'package:flutter_application_1/shared/cubit/cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 
+
+import '../models/reminder_model.dart';
 import '../shared/cubit/state.dart';
 
 class AddTask extends StatefulWidget {
-  AddTask({Key? key}) : super(key: key);
+  const AddTask({Key? key}) : super(key: key);
 
   @override
   State<AddTask> createState() => _AddTaskState();
@@ -19,35 +21,31 @@ class _AddTaskState extends State<AddTask> {
   final titleController = TextEditingController();
 
   final remindController = TextEditingController();
-  final repeatController = TextEditingController();
+  
 
-  var formKey = GlobalKey<FormState>();
-
-  var timeController = TextEditingController();
+  var startTimeController = TextEditingController();
+  var endTimeController = TextEditingController();
 
   var dateController = TextEditingController();
 
-  var startTimeController = TextEditingController();
+  DateTime startTime = DateTime.now();
+  DateTime endTime = DateTime.now();
 
-  var endTimeController = TextEditingController();
+  List<ReminderModel> reminderList = [
+    ReminderModel(
+      minutes: 10,
+      reminder: '10 minutes before',
+    ),
+    ReminderModel(
+      minutes: 30,
+      reminder: '30 minutes before',
+    ),
+    ReminderModel(
+      minutes: 60,
+      reminder: '1 hour before',
+    ),
+  ];
 
-  DateTime selectTime = DateTime.now();
-
-  String startTime = DateFormat('hh:mm a').format(DateTime.now()).toString();
-
-  String endTime = DateFormat('hh:mm a')
-      .format(DateTime.now().add(Duration(minutes: 15)))
-      .toString();
-
-  int selectRemind = 5;
-
-  List<int> remindList = [5, 10, 15, 20];
-
-  String selectRepeat = 'None';
-
-  List<String> repeatList = ['None', 'Daily', 'Weekly', 'Monthly'];
-
-  int selectColor = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -60,14 +58,14 @@ class _AddTaskState extends State<AddTask> {
             onPressed: () {
               Navigator.pop(context);
             },
-            icon: Icon(
+            icon: const Icon(
               Icons.arrow_back_ios_new,
-              size: 30,
+              size: 20,
               color: Colors.black,
             )),
-        title: Text(
+        title: const Text(
           'Add Task',
-          style: TextStyle(color: Colors.black, fontSize: 30),
+          style: TextStyle(color: Colors.black, fontSize: 20),
         ),
       ),
       body: BlocProvider(
@@ -78,244 +76,179 @@ class _AddTaskState extends State<AddTask> {
   },
   builder: (context, state) {
     return SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(30.0),
-          child: Form(
-            key: formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  'Title',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                defaultFormField(
-                    controller: titleController,
-                    type: TextInputType.text,
-                    validat: (val) {
+        child: Column(
+          children: [
+            const Divider(height: 2, thickness: 1.5),
+            Padding(
+              padding: const EdgeInsets.all(30.0),
+                child: Column(
+
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    DefaultFormField(hitText: 'Enter Task Title ', validation: (val) {
                       if (val!.isEmpty) {
                         return 'Title is empty';
                       } else {
                         return null;
                       }
-                    },
-                    label: 'Design team meeting',
-                    prefix: Icons.title),
-                SizedBox(
-                  height: 15,
-                ),
-                Text(
-                  'Date',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                defaultFormField(
-                    onTap: () {
-                      showDatePicker(
-                              context: context,
-                              initialDate: DateTime.now(),
-                              firstDate: DateTime.now(),
-                              lastDate: DateTime.parse('2021-10-01'))
-                          .then((value) {
-                        dateController.text = DateFormat.yMMMd().format(value!);
-                        print(DateFormat.yMMMd().format(value));
-                      });
-                    },
-                    controller: timeController,
-                    type: TextInputType.text,
-                    validat: (val) {
+                    }, controller: titleController, head: 'Title'),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    DefaultFormField(
+                      onTap: (){
+                        showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime.now(),
+                          lastDate: DateTime(2030),
+                        ).then((value) {
+                          dateController.text = value.toString().split(' ').first;
+                        });
+                      },
+                        hitText: 'Task Date ',
+                        validation: (val) {
                       if (val!.isEmpty) {
                         return 'Date is empty';
                       } else {
                         return null;
                       }
-                    },
-                    label: DateFormat.yMd().format(selectTime),
-                    prefix: Icons.calendar_today_rounded),
-                SizedBox(
-                  height: 15,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Expanded(
-                        child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        children: [
-                          Text(
-                            'Start Time',
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          defaultFormField(
-                              onTap: () {
-                                showTimePicker(
-                                        context: context,
-                                        initialTime: TimeOfDay.now())
-                                    .then((value) {
-                                  timeController.text = value!.format(context);
-                                  print(value.format(context));
-                                });
-                              },
-                              controller: startTimeController,
-                              type: TextInputType.datetime,
-                              validat: (val) {
-                                if (val!.isEmpty) {
-                                  return 'Start Time is empty';
-                                } else {
-                                  return null;
-                                }
-                              },
-                              label: startTime,
-                              prefix: Icons.watch_later_outlined)
-                        ],
+                    }, controller: dateController,
+                        head: 'Data'),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Expanded(
+                            child:DefaultFormField(
+                                onTap: (){
+                                  showTimePicker(
+                                    context: context,
+                                    initialTime: TimeOfDay.now(),
+                                  ).then((value) {
+                                    startTimeController.text =
+                                        value!.format(context);
+
+                                    setState(() {
+
+                                    });
+                                  });
+                                },
+                                hitText: 'Start Time ',
+                                validation: (val) {
+                                  if (val!.isEmpty) {
+                                    return 'Start Time is empty';
+                                  } else {
+                                    return null;
+                                  }
+                                }, controller: startTimeController,
+                                head: 'Start Time'),
+                             ),
+                        const SizedBox(
+                          width: 20.0,
+                        ),
+                        Expanded(
+                            child:DefaultFormField(
+                                onTap: (){
+                                  showTimePicker(
+                                    context: context,
+                                    initialTime:  TimeOfDay.now(),
+                                  ).then((value) {
+                                    if(value!.hour > startTime.hour) {
+                                      if(value.minute > startTime.minute) {
+                                        endTimeController.text = value.format(context);
+                                      } else {
+                                        debugPrint('End time should be greater than start time');
+                                      }
+                                      endTimeController.text = value.format(context);
+                                    } else {
+                                      debugPrint('End time should be greater than start time');
+                                    }
+                                  });
+                                },
+                                hitText: 'End Time ',
+                                validation: (val) {
+                                  if (val!.isEmpty) {
+                                    return 'End Time is empty';
+                                  } else {
+                                    return null;
+                                  }
+                                }, controller: endTimeController,
+                                head: 'End Time'),
+                     ),
+                      ]
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    const Text(
+                      'Remind',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
                       ),
-                    )),
-                    Expanded(
-                        child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        children: [
-                          Text(
-                            'End Time',
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    DropdownButtonFormField(
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.grey[200],
+                        hintText: 'Task Date',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide.none,
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide.none,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(
+                            color: Colors.grey,
+                            width: 1,
                           ),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          defaultFormField(
-                              onTap: () {
-                                showTimePicker(
-                                        context: context,
-                                        initialTime: TimeOfDay.now())
-                                    .then((value) {
-                                  timeController.text = value!.format(context);
-                                  print(value.format(context));
-                                });
-                              },
-                              controller: endTimeController,
-                              type: TextInputType.datetime,
-                              validat: (val) {
-                                if (val!.isEmpty) {
-                                  return 'End Time is empty';
-                                } else {
-                                  return null;
-                                }
-                              },
-                              label: endTime,
-                              prefix: Icons.watch_later_outlined)
-                        ],
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        hintStyle: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey,
+                        ),
                       ),
-                    )),
+                      items: reminderList
+                          .asMap()
+                          .map(
+                            (key, value) => MapEntry(
+                          key,
+                          DropdownMenuItem(
+                            value: value.minutes,
+                            child: Text(
+                              value.reminder,
+                            ),
+                          ),
+                        ),
+                      )
+                          .values
+                          .toList(),
+                      onChanged: (value) {
+                        debugPrint('$value');
+                      },
+                    ),
+                    const SizedBox(
+                      height: 85,
+                    ),
+                   Container(
+                     margin: const EdgeInsets.all(15),
+                     width: double.infinity,
+                       child: MyButton(onPressed: (){}, text: 'Create Task'))
                   ],
                 ),
-                SizedBox(
-                  height: 15,
-                ),
-                Text(
-                  'Remind',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                defaultFormField(
-                    onTap: () {
-                      DropdownButton<dynamic>(
-                          dropdownColor: Colors.blueGrey,
-                          items: remindList
-                              .map<DropdownMenuItem<String>>(
-                                  (e) => DropdownMenuItem(child: Text('$e')))
-                              .toList(),
-                          onChanged: (value) {
-                            setState(() {
-                              selectRemind = value;
-                            });
-                          });
-                    },
-                    controller: remindController,
-                    type: TextInputType.number,
-                    validat: (val) {
-                      if (val!.isEmpty) {
-                        return 'Date is empty';
-                      } else {
-                        return null;
-                      }
-                    },
-                    label: '$selectRemind minuntes',
-                    prefix: Icons.calendar_today_rounded),
-                SizedBox(
-                  height: 15,
-                ),
-                Text(
-                  'Repeat',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                defaultFormField(
-                    onTap: () {
-                      DropdownButton<dynamic>(
-                          dropdownColor: Colors.blueGrey,
-                          items: repeatList
-                              .map<DropdownMenuItem<String>>(
-                                  (e) => DropdownMenuItem(child: Text('$e')))
-                              .toList(),
-                          onChanged: (value) {
-                            setState(() {
-                              selectRepeat = value;
-                            });
-                          });
-                    },
-                    controller: repeatController,
-                    type: TextInputType.number,
-                    validat: (val) {
-                      if (val!.isEmpty) {
-                        return 'Repeat is empty';
-                      } else {
-                        return null;
-                      }
-                    },
-                    label: '$selectRepeat ',
-                    prefix: Icons.calendar_today_rounded),
-                SizedBox(
-                  height: 15,
-                ),
-                Container(
-                    width: double.infinity,
-                    child: MyButton(
-                        height: 16,
-                        onPressed: () {
-                          if (formKey.currentState!.validate()) {
-                            AppCubit.get(context).insertToDatabase(
-                                title: titleController.text,
-                                time: timeController.text,
-                                date: dateController.text,
-                              repeat: repeatController.text,
-                              remind:remindController.text,
-                              endTime:endTimeController.text , 
-                              startTime: startTimeController.text ,
 
-                            );
-                          }
-                        },
-                        size: 20,
-                        text: 'Create a Task',
-                        width: 18))
-              ],
             ),
-          ),
+          ],
         ),
       );
   },
