@@ -28,8 +28,8 @@ class _AddTaskState extends State<AddTask> {
 
   var dateController = TextEditingController();
 
-  DateTime startTime = DateTime.now();
-  DateTime endTime = DateTime.now();
+  TimeOfDay startTime = TimeOfDay.now();
+  TimeOfDay endTime = TimeOfDay.now();
 
   List<ReminderModel> reminderList = [
     ReminderModel(
@@ -126,10 +126,12 @@ class _AddTaskState extends State<AddTask> {
                                 onTap: (){
                                   showTimePicker(
                                     context: context,
-                                    initialTime: TimeOfDay.now(),
+                                    initialTime: startTime,
                                   ).then((value) {
                                     startTimeController.text =
                                         value!.format(context);
+                                    startTime = value;
+                                    endTime = value;
 
                                     setState(() {
 
@@ -154,7 +156,7 @@ class _AddTaskState extends State<AddTask> {
                                 onTap: (){
                                   showTimePicker(
                                     context: context,
-                                    initialTime:  TimeOfDay.now(),
+                                    initialTime:  endTime,
                                   ).then((value) {
                                     if(value!.hour > startTime.hour) {
                                       if(value.minute > startTime.minute) {
