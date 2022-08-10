@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 
 class MyButton extends StatelessWidget {
-  final double height;
-  final double width;
-  final double size;
+  double height;
+  double width;
+  double size;
   final String text;
   final VoidCallback onPressed;
   final double radius;
-  final Color color;
-  final Color textColor;
+   Color color;
+   Color textColor;
 
   MyButton(
-      {required this.height,
+      { this.height=18,
       required this.onPressed,
-      required this.size,
+       this.size=20,
       required this.text,
-      required this.width,
+       this.width=18,
       this.radius = 15,
-      this.color = Colors.indigo,
+      this.color = Colors.green,
       this.textColor = Colors.white});
 
   @override
@@ -26,14 +26,14 @@ class MyButton extends StatelessWidget {
       elevation: 0,
       onPressed: onPressed,
       color: color,
+      padding: EdgeInsets.symmetric(horizontal: height, vertical: height),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(radius)),
+      ),
       child: Text(
         text,
         style: TextStyle(
             color: textColor, fontSize: size, fontWeight: FontWeight.w600),
-      ),
-      padding: EdgeInsets.symmetric(horizontal: height, vertical: height),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(radius)),
       ),
     );
   }

@@ -101,15 +101,19 @@ class _BoardState extends State<Board> with SingleTickerProviderStateMixin {
                   Center(child: FavoriteTasks()),
                 ]),
               ),
-              MyButton(
-                  height: 18,
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => AddTask()));
-                  },
-                  size: 20,
-                  text: 'Add a task',
-                  width: 18)
+              Container(
+                width: double.infinity,
+                child: MyButton(
+                  color: Colors.green,
+                    height: 18,
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => const AddTask()));
+                    },
+                    size: 20,
+                    text: 'Add New Task',
+                    width: 18),
+              )
             ]),
           ),
         );
