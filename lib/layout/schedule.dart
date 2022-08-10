@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/shared/style/themes.dart';
 
 class Schedule extends StatelessWidget {
   const Schedule({required this.payLoad});
@@ -36,7 +35,7 @@ class Schedule extends StatelessWidget {
             margin: EdgeInsets.symmetric(horizontal: 30,vertical: 10),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(30),
-              color: primaryClr,
+              color: Colors.blue,
             ),
             child: SingleChildScrollView(
                 child: Column(
