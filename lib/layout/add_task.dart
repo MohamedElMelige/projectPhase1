@@ -25,12 +25,13 @@ class _AddTaskState extends State<AddTask> {
   var endTimeController = TextEditingController();
 
   TimeOfDay endTime =TimeOfDay.now();
+  TimeOfDay startTime =TimeOfDay.now();
 
   List<ReminderModel> reminderList = [
-    ReminderModel(reminder: '10 minutes', minutes: 10),
-    ReminderModel(reminder: '15 minutes', minutes: 15),
-    ReminderModel(reminder: '30 minutes', minutes: 30),
-    ReminderModel(reminder: '1 hour', minutes: 60),
+    ReminderModel(reminder: '10 minutes before', minutes: 10),
+    ReminderModel(reminder: '15 minutes before', minutes: 15),
+    ReminderModel(reminder: '30 minutes before', minutes: 30),
+    ReminderModel(reminder: '1 hour before', minutes: 60),
   ];
 
   @override
@@ -61,172 +62,178 @@ class _AddTaskState extends State<AddTask> {
             // TODO: implement listener
           },
           builder: (context, state) {
-            return  Column(
-                children: [
-                  const Divider(height: 2, thickness: 1),
-                  Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          DefaultFormField(
-                            head: 'Title',
-                            controller: titleController,
-                            hitText: 'Enter Task Title',
-                            validation: (val) {
-                              if (val!.isEmpty) {
-                                return 'Title is empty';
-                              } else {
-                                return null;
-                              }
-                            },
-                          ),
-                          const SizedBox(
-                            height: 40,
-                          ),
-                          DefaultFormField(
-                            onTap: () {
-                              showDatePicker(
-                                      context: context,
-                                      initialDate: DateTime.now(),
-                                      firstDate: DateTime.now(),
-                                      lastDate: DateTime(2030))
-                                  .then((value) {
-                                dateController.text =
-                                    value.toString().split(' ').first;
-                              });
-                            },
-                            head: 'Date',
-                            controller: dateController,
-                            hitText: 'Enter Task Date',
-                            validation: (val) {
-                              if (val!.isEmpty) {
-                                return 'Date is empty';
-                              } else {
-                                return null;
-                              }
-                            },
-                          ),
-                          const SizedBox(
-                            height: 40,
-                          ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                child: DefaultFormField(
-                                  onTap: () {
-                                    showTimePicker(
-                                            context: context,
-                                            initialTime: TimeOfDay.now())
-                                        .then((value) {
-                                      startTimeController.text =
-                                          value!.format(context);
-                                      endTime=value;
-                                      setState(() {
+            return  SingleChildScrollView(
+              child: Column(
+                  children: [
+                    const Divider(height: 2, thickness: 1),
+                    Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            DefaultFormField(
+                              head: 'Title',
+                              controller: titleController,
+                              hitText: 'Enter Task Title',
+                              validation: (val) {
+                                if (val!.isEmpty) {
+                                  return 'Title is empty';
+                                } else {
+                                  return null;
+                                }
+                              },
+                            ),
+                            const SizedBox(
+                              height: 40,
+                            ),
+                            DefaultFormField(
+                              onTap: () {
+                                showDatePicker(
+                                        context: context,
+                                        initialDate: DateTime.now(),
+                                        firstDate: DateTime.now(),
+                                        lastDate: DateTime(2030))
+                                    .then((value) {
+                                  dateController.text =
+                                      value.toString().split(' ').first;
+                                });
+                              },
+                              head: 'Date',
+                              controller: dateController,
+                              hitText: 'Enter Task Date',
+                              validation: (val) {
+                                if (val!.isEmpty) {
+                                  return 'Date is empty';
+                                } else {
+                                  return null;
+                                }
+                              },
+                            ),
+                            const SizedBox(
+                              height: 40,
+                            ),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  child: DefaultFormField(
+                                    onTap: () {
+                                      showTimePicker(
+                                              context: context,
+                                              initialTime: startTime)
+                                          .then((value) {
+                                        startTimeController.text =
+                                            value!.format(context);
+                                        endTime=value;
+                                        setState(() {
+
+                                        });
+                                      });
+                                    },
+                                    head: 'Start Time',
+                                    controller: startTimeController,
+                                    hitText: 'Start Time',
+                                    validation: (val) {
+                                      if (val!.isEmpty) {
+                                        return 'Start  time is empty';
+                                      } else {
+                                        return null;
+                                      }
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 20,
+                                ),
+                                Expanded(
+                                  child: DefaultFormField(
+                                    onTap: () {
+                                      showTimePicker(
+                                              context: context,
+                                              initialTime: endTime)
+                                          .then((value) {
+                                            if (value!.hour>startTime.hour && value.minute>startTime.minute) {
+                                              endTimeController.text=value.format(context);
+                                            }  else{
+                                             return 'End time should be greater than start time';
+                                            }
 
                                       });
-                                    });
-                                  },
-                                  head: 'Start Time',
-                                  controller: startTimeController,
-                                  hitText: 'Start Time',
-                                  validation: (val) {
-                                    if (val!.isEmpty) {
-                                      return 'Start  time is empty';
-                                    } else {
-                                      return null;
-                                    }
-                                  },
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 20,
-                              ),
-                              Expanded(
-                                child: DefaultFormField(
-                                  onTap: () {
-                                    showTimePicker(
-                                            context: context,
-                                            initialTime: endTime)
-                                        .then((value) {
-                                      endTimeController.text =
-                                          value!.format(context);
-                                    });
-                                  },
-                                  head: 'End Time',
-                                  controller: endTimeController,
-                                  hitText: 'End time',
-                                  validation: (val) {
-                                    if (val!.isEmpty) {
-                                      return 'End time is empty';
-                                    } else {
-                                      return null;
-                                    }
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 40,
-                          ),
-                          const Text(
-                            'Remaind',
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(
-                            height: 16,
-                          ),
-                          DropdownButtonFormField(
-                              decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: Colors.grey[200],
-                                  enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                      borderSide: BorderSide.none),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: const BorderSide(
-                                      color: Colors.grey,
-                                      width: 1,
-                                    ),
-                                    borderRadius: BorderRadius.circular(12),
+                                    },
+                                    head: 'End Time',
+                                    controller: endTimeController,
+                                    hitText: 'End time',
+                                    validation: (val) {
+                                      if (val!.isEmpty) {
+                                        return 'End time is empty';
+                                      } else {
+                                        return null;
+                                      }
+                                    },
                                   ),
-                                  hintText: 'Remaid',
-                                  hintStyle: const TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.grey,
-                                  )),
-                              items: reminderList
-                                  .asMap()
-                                  .map(
-                                    (key, value) => MapEntry(
-                                      key,
-                                      DropdownMenuItem(
-                                        value: value.minutes,
-                                        child: Text(value.reminder),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 40,
+                            ),
+                            const Text(
+                              'Remaind',
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(
+                              height: 16,
+                            ),
+                            DropdownButtonFormField(
+                                decoration: InputDecoration(
+                                    filled: true,
+                                    fillColor: Colors.grey[200],
+                                    enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                        borderSide: BorderSide.none),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: const BorderSide(
+                                        color: Colors.grey,
+                                        width: 1,
                                       ),
+                                      borderRadius: BorderRadius.circular(12),
                                     ),
-                                  )
-                                  .values
-                                  .toList(),
-                              onChanged: (value) {
-                                debugPrint('$value');
-                              })
-                        ],
+                                    hintText: 'Remaid',
+                                    hintStyle: const TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.grey,
+                                    )),
+                                items: reminderList
+                                    .asMap()
+                                    .map(
+                                      (key, value) => MapEntry(
+                                        key,
+                                        DropdownMenuItem(
+                                          value: value.minutes,
+                                          child: Text(value.reminder),
+                                        ),
+                                      ),
+                                    )
+                                    .values
+                                    .toList(),
+                                onChanged: (value) {
+                                  debugPrint('$value');
+                                })
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  const Spacer(),
-                  Container(
-                    margin: const EdgeInsets.all(15),
-                    width: double.infinity,
-                    child: MyButton(text: 'Create Task', onPressed:(){} ,),
-                  )
-                ],
-              );
+                    SizedBox(height: 85,),
+                    Container(
+                      margin: const EdgeInsets.all(15),
+                      width: double.infinity,
+                      child: MyButton(text: 'Create Task', onPressed:(){} ,),
+                    )
+                  ],
+                ),
+            );
           },
         ),
       ),
